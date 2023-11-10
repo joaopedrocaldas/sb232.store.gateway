@@ -2,10 +2,23 @@ server:
   port: 8080
 
 spring:
+  application:
+    name: store-gateway
   cloud:
     gateway:
       routes:
         - id: product
-          uri: http://localhost:8081/
+          uri: lb://store-product
           predicates:
             - Path=/product/**
+        - id: client
+          uri: lb://store-client
+          predicates:
+            - Path=/client/**
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
